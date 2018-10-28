@@ -42,7 +42,7 @@
         "block-scoped-var": "error",
         "dot-notation": "error",
         "eqeqeq": "error",
-        "no-console": "warn",
+        "no-console": 0,
         "no-debugger": "warn",
         "no-div-regex": "error",
         "no-else-return": "error",
