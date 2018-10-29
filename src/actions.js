@@ -21,6 +21,9 @@ module.exports = (key, amount) => {
         case commands.VOLUME_DOWN:
             volumeDown(amount);
             break;
+        case commands.SET_CHANNEL:
+            setChannel(amount);
+            break;
         default:
             break;
     }
@@ -40,8 +43,8 @@ async function volumeDown(amount = 5) {
     let iterate = amount;
 
     while (iterate > 0) {
-        execute(`${BASE_COMMAND} KEY_VOLUMEDOWN`);
         iterate--;
+        execute(`${BASE_COMMAND} KEY_VOLUMEDOWN`);
         await sleep(0.5);
     }
 }
@@ -54,7 +57,6 @@ async function cycleInput() {
     await sleep(0.5);
 
     execute(`${BASE_COMMAND} KEY_OK`);
-    await sleep(0.5);
 }
 
 async function onOff() {
@@ -63,4 +65,11 @@ async function onOff() {
 
 async function mute() {
     execute(`${BASE_COMMAND} KEY_MUTE`);
+}
+
+async function setChannel(channel) {
+    execute(`${BASE_COMMAND} KEY_${channel}`);
+    await sleep(0.5);
+
+    execute(`${BASE_COMMAND} KEY_OK`);
 }
