@@ -1,27 +1,17 @@
-const awsIot = require('aws-iot-device-sdk');
+const WebSocket = require('ws');
 const actions = require('./actions');
 require('dotenv').config();
 
-const EVENT_NAME = 'remote/command';
-
-const device = awsIot.device({
-    keyPath: './keys/Remote.private.key',
-    certPath: './keys/Remote.cert.pem',
-    caPath: './keys/root-CA.crt',
-    region: process.env.AWS_REGION,
-    clientId: `remote.node.${Date.now()}`,
-    host: process.env.AWS_IOT_HOST,
+const url = process.env.WS_ENDPOINT;
+const ws = new WebSocket(url, {
     protocol: 'wss',
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretKey: process.env.AWS_SECRET,
 });
 
-device.on('connect', () => {
-    console.log(`connected to ${EVENT_NAME}`);
-    device.subscribe(EVENT_NAME);
+ws.on('connect', () => {
+    console.log(`connected to ${url}`);
 });
 
-device.on('message', async(topic, payload) => {
+ws.on('message', (payload) => {
     const { command, amount } = JSON.parse(payload.toString());
 
     console.log(`Recieved command ${command}`);
@@ -31,8 +21,4 @@ device.on('message', async(topic, payload) => {
     } else {
         console.log('Could not find command');
     }
-});
-
-device.on('error', (error) => {
-    console.log(error);
 });
